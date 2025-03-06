@@ -15,7 +15,7 @@
             <div id="header_container">
             <div id="menu_container">
             <a href="produtos">Início</a>
-            <a href="minhasCompras">Lista de Produtos</a>
+            <a href="listaProdutos">Lista de Produtos</a>
             <a href="carrinho">Ver Carrinho</a>
             </div><div id="menu_container">
             <a href="minhasCompras">Minhas Compras</a>
