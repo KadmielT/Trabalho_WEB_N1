@@ -1,9 +1,10 @@
 body {
     font-family: Arial, sans-serif;
-    max-width: 0 auto;
+    max-width: 600px;
     margin: 0 auto;
     padding: 20px;
     background-color: #8a807e;
+    color: #ffffff;
 }
 h2 {
     color: white;
@@ -24,9 +25,7 @@ input:hover {
 button {
     background-color: #140005;
     color: white;
-    border: none;
     cursor: pointer;
-    border: 1.5px solid rgb(255, 255, 255);
 }
 button:hover {
     background-color: #470012;
@@ -40,4 +39,18 @@ li {
     padding: 10px;
     margin: 5px 0;
     border-radius: 5px;
+    color: #ffffff;
+}
+a {
+    color: #bbc4c2;
+    text-decoration: none;
+    margin: 0 10px;
+}
+a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+.erro {
+    color: #ff4444;
+    text-align: center;
 }

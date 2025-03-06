@@ -2,20 +2,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Cadastro de Usuário</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Loja Online</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/style/style.css">
 </head>
 <body>
-    <h2>Cadastro de Usuário</h2>
-    <% if (request.getAttribute("erro") != null) { %>
-        <p style="color:red;"><%= request.getAttribute("erro") %></p>
-    <% } %>
-    <form action="cadastrar" method="post">
-        Nome: <input type="text" name="nome" required><br>
-        E-mail: <input type="email" name="email" required><br>
-        Senha: <input type="password" name="senha" required><br>
-        Confirmar Senha: <input type="password" name="confirmarSenha" required><br>
-        <button type="submit">Cadastrar</button>
-    </form>
+    <h2>Bem-vindo à Loja Online!</h2>
+    <p>Explore nossos produtos e faça seu pedido.</p>
+    <a href="produtos">Ver Produtos</a> | <a href="carrinho">Ver Carrinho</a>
 </body>
 </html>

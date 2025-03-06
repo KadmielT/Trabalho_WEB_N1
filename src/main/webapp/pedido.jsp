@@ -2,12 +2,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Operação Realizada</title>
+    <title>Pedido Finalizado</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/style/style.css">
 </head>
 <body>
-    <h2>Operação realizada com sucesso!</h2>
-    <a href="produtos">Ver Produtos</a> | <a href="carrinho">Ver Carrinho</a>
+    <h2>Pedido finalizado com sucesso!</h2>
+    <p>Obrigado pela compra!</p>
+    <a href="produtos">Voltar às compras</a>
 </body>
 </html>
