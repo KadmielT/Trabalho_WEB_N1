@@ -11,17 +11,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet("/produtos")
-public class ProdutoServlet extends HttpServlet {
+@WebServlet("/listaProdutos")
+public class ListaProdutosServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Produto> produtos = (List<Produto>) request.getSession().getAttribute("produtos");
+        List<Produto> produtos = (List<Produto>) request.getSession().getAttribute("listaProdutos");
         if (produtos == null) {
             produtos = new ArrayList<>();
-            request.getSession().setAttribute("produtos", produtos);
+            request.getSession().setAttribute("listaProdutos", produtos);
         }
-        request.setAttribute("produtos", produtos);
-        request.getRequestDispatcher("produtos.jsp").forward(request, response);
+        request.setAttribute("listaProdutos", produtos);
+        request.getRequestDispatcher("listaProdutos.jsp").forward(request, response);
     }
 
     @Override
@@ -45,9 +45,9 @@ public class ProdutoServlet extends HttpServlet {
                 produtos = new ArrayList<>();
             }
             produtos.add(novoProduto);
-            request.getSession().setAttribute("listaProdutos", produtos);
+            request.getSession().setAttribute("produtos", produtos);
 
-            response.sendRedirect("listaProdutos");
+            response.sendRedirect("lista_produtos");
         } catch (NumberFormatException e) {
             request.setAttribute("erro", "Valores inválidos. Verifique os campos preenchidos.");
             request.getRequestDispatcher("produtos.jsp").forward(request, response);
