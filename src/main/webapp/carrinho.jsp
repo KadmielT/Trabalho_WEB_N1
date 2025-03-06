@@ -34,8 +34,6 @@
                         <button type="submit">Finalizar Pedido</button>
                     </form>
                 <% } %>
-
-                <a href="produtos.jsp">Continuar Comprando</a>
     </div>
 </body>
 </html>

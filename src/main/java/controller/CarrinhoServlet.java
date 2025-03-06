@@ -49,6 +49,6 @@ public class CarrinhoServlet extends HttpServlet {
             carrinho.remover(nomeProduto);
         }
 
-        response.sendRedirect("carrinho");
+        response.sendRedirect("listaProdutos");
     }
 }
