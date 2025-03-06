@@ -29,6 +29,6 @@ public class UsuarioServlet extends HttpServlet {
         Usuario novoUsuario = new Usuario(nome, email, senha);
         request.getSession().setAttribute("usuario", novoUsuario);
 
-        response.sendRedirect("produtos"); // Redireciona para a loja
+        response.sendRedirect("listaProdutos"); // Redireciona para a loja
     }
 }
