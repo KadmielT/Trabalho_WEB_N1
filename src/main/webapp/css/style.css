@@ -12,11 +12,16 @@ h2 {
     width: 100vw;
     height: 60px;
     flex-direction: row;
-    justify-content: end;
+    justify-content: space-between;
     background-color: #65c9ff;
 }
+#menu_container {
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+}
 #body_container {
-    max-width: 600px;
+    max-width: 1000px;
     margin: 0 auto;
     padding: 20px;
 }
@@ -56,13 +61,13 @@ li {
     color: #ffffff;
 }
 a {
-    color: #09a7fc;
+    color: white;
     text-decoration: none;
     margin: 0 10px;
 }
 a:hover {
-    color: #65c9ff;
-    text-decoration: underline;
+    color: white;
+    text-decoration: none;
 }
 .erro {
     color: #ff4444;

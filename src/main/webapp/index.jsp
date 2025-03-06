@@ -2,13 +2,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Cadastro de Usuário</title>
+    <title>MiniLoja</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body
     <div id = "body_container">
-        <h2>Cadastro de Usuário</h2>
+        <h2>Bem vindo à MiniLoja!</h2>
         <% if (request.getAttribute("erro") != null) { %>
             <p class="erro"><%= request.getAttribute("erro") %></p>
         <% } %>
@@ -17,7 +17,7 @@
             E-mail: <input type="email" name="email" required><br>
             Senha: <input type="password" name="senha" required><br>
             Confirmar Senha: <input type="password" name="confirmarSenha" required><br>
-            <button type="submit">Cadastrar</button>
+            <button type="submit">Login</button>
         </form>
     </div>
 </body>

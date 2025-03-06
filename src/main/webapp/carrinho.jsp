@@ -12,7 +12,7 @@
     <%
         Usuario usuario = (Usuario) session.getAttribute("usuario");
         if (usuario != null) { %>
-            <div id="header_container"><p id="text">IMG</p><p id = "text"><%= usuario.getNome() %></p></div>
+            <div id="header_container"><div id="menu_container"><a href="produtos.jsp">Início</a><a href="carrinho">Ver Carrinho</a></div><div id="menu_container"><p id="text">IMG</p><p id = "text"><%= usuario.getNome() %></p><a href="index.jsp">Voltar</a></div></div>
         <% }
     %>
     <div id = "body_container">
