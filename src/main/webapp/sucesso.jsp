@@ -8,6 +8,6 @@
 </head>
 <body>
     <h2>Operação realizada com sucesso!</h2>
-    <a href="produtos">Ver Produtos</a> | <a href="carrinho">Ver Carrinho</a>
+    <a href="index.jsp">Voltar ao Cadastro</a> | <a href="produtos">Ver Produtos</a> | <a href="carrinho">Ver Carrinho</a>
 </body>
 </html>
