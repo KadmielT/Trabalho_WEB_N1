@@ -12,8 +12,17 @@
     <%
         Usuario usuario = (Usuario) session.getAttribute("usuario");
         if (usuario != null) { %>
-            <div id="header_container"><div id="menu_container"><a href="produtos">Início</a><a href="listaProdutos">Lista de Produtos</a><a href="carrinho">Ver Carrinho</a></div><div id="menu_container"><p id="text">IMG</p><p id = "text"><%= usuario.getNome() %></p><a href="index.jsp">Voltar</a></div></div>
-        <% }
+                    <div id="header_container">
+                    <div id="menu_container">
+                    <a href="produtos">Início</a>
+                    <a href="minhasCompras">Lista de Produtos</a>
+                    <a href="carrinho">Ver Carrinho</a>
+                    </div><div id="menu_container">
+                    <a href="minhasCompras">Minhas Compras</a>
+                    <p id="text">IMG</p>
+                    <p id = "text"><%= usuario.getNome() %>
+                    </p><a href="index.jsp">Voltar</a></div></div>
+                <% }
     %>
     <div id="body_container">
         <div id="cadastro_produtos">

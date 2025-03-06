@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Lista de Produtos</title>
+    <title>Minhas compras</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -12,24 +12,24 @@
     <%
         Usuario usuario = (Usuario) session.getAttribute("usuario");
         if (usuario != null) { %>
-                    <div id="header_container">
-                    <div id="menu_container">
-                    <a href="produtos">Início</a>
-                    <a href="minhasCompras">Lista de Produtos</a>
-                    <a href="carrinho">Ver Carrinho</a>
-                    </div><div id="menu_container">
-                    <a href="minhasCompras">Minhas Compras</a>
-                    <p id="text">IMG</p>
-                    <p id = "text"><%= usuario.getNome() %>
-                    </p><a href="index.jsp">Voltar</a></div></div>
-                <% }
+            <div id="header_container">
+            <div id="menu_container">
+            <a href="produtos">Início</a>
+            <a href="minhasCompras">Lista de Produtos</a>
+            <a href="carrinho">Ver Carrinho</a>
+            </div><div id="menu_container">
+            <a href="minhasCompras">Minhas Compras</a>
+            <p id="text">IMG</p>
+            <p id = "text"><%= usuario.getNome() %>
+            </p><a href="index.jsp">Voltar</a></div></div>
+        <% }
     %>
     <div id="body_container">
-        <div id="produtos">
+        <div id="minhasCompras">
             <h2>Produtos Disponíveis</h2>
             <ul>
                 <%
-                    List<Produto> produtos = (List<Produto>) request.getAttribute("listaProdutos");
+                    List<Produto> produtos = (List<Produto>) request.getAttribute("minhasCompras");
                     if (produtos != null && !produtos.isEmpty()) {
                         for (Produto p : produtos) { %>
                             <li><%= p.getNome() %> - <%= p.getDescricao() %> - R$<%= p.getPreco() %> (Qtd: <%= p.getQuantidade() %>)
