@@ -16,7 +16,7 @@
     %>
     <div id = "body_container">
         <h2>Operação realizada com sucesso!</h2>
-        <a href="index.jsp">Voltar ao Cadastro</a> | <a href="produtos">Ver Produtos</a> | <a href="carrinho">Ver Carrinho</a>
+        <a href="produtos">Ver Produtos</a> | <a href="carrinho">Ver Carrinho</a>
     </div>
 </body>
 </html>

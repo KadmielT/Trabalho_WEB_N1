@@ -36,6 +36,6 @@ public class FinalizarPedidoServlet extends HttpServlet {
         session.removeAttribute("carrinho");
 
         // Redirecionar para página de confirmação
-        response.sendRedirect("pedidoFinalizado.jsp");
+        response.sendRedirect("pedido.jsp");
     }
 }
