@@ -26,19 +26,32 @@ public class ProdutoServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String nome = request.getParameter("nome");
-        String descricao = request.getParameter("descricao");
-        double preco = Double.parseDouble(request.getParameter("preco"));
-        int quantidade = Integer.parseInt(request.getParameter("quantidade"));
+        try {
+            String nome = request.getParameter("nome");
+            String descricao = request.getParameter("descricao");
+            double preco = Double.parseDouble(request.getParameter("preco"));
+            int quantidade = Integer.parseInt(request.getParameter("quantidade"));
 
-        Produto novoProduto = new Produto(nome, descricao, preco, quantidade);
-        List<Produto> produtos = (List<Produto>) request.getSession().getAttribute("produtos");
         if (produtos == null) {
-            produtos = new ArrayList<>();
-        }
-        produtos.add(novoProduto);
-        request.getSession().setAttribute("produtos", produtos);
 
-        response.sendRedirect("sucesso.jsp");
+            if (preco < 0 || quantidade < 0) {
+                request.setAttribute("erro", "Preço e quantidade não podem ser negativos.");
+                request.getRequestDispatcher("produtos.jsp").forward(request, response);
+                return;
+            }
+
+            Produto novoProduto = new Produto(nome, descricao, preco, quantidade);
+            List<Produto> produtos = (List<Produto>) request.getSession().getAttribute("produtos");
+            if (produtos == null) {
+                produtos = new ArrayList<>();
+            }
+            produtos.add(novoProduto);
+            request.getSession().setAttribute("produtos", produtos);
+
+            response.sendRedirect("sucesso.jsp");
+        } catch (NumberFormatException e) {
+            request.setAttribute("erro", "Valores inválidos. Verifique os campos preenchidos.");
+            request.getRequestDispatcher("produtos.jsp").forward(request, response);
+        }
     }
 }

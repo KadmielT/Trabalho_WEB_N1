@@ -16,6 +16,7 @@ public class CarrinhoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Carrinho carrinho = (Carrinho) request.getSession().getAttribute("carrinho");
+
         if (carrinho == null) {
             carrinho = new Carrinho();
             request.getSession().setAttribute("carrinho", carrinho);
@@ -36,11 +37,12 @@ public class CarrinhoServlet extends HttpServlet {
         if ("adicionar".equals(acao)) {
             String nomeProduto = request.getParameter("nomeProduto");
             int quantidade = Integer.parseInt(request.getParameter("quantidade"));
+
             List<Produto> produtos = (List<Produto>) request.getSession().getAttribute("produtos");
             Produto produto = produtos.stream().filter(p -> p.getNome().equals(nomeProduto)).findFirst().orElse(null);
+
             if (produto != null && produto.getQuantidade() >= quantidade) {
                 carrinho.adicionar(produto, quantidade);
-                produto.setQuantidade(produto.getQuantidade() - quantidade);
             }
         } else if ("remover".equals(acao)) {
             String nomeProduto = request.getParameter("nomeProduto");

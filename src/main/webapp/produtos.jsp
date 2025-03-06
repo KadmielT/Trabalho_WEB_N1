@@ -15,13 +15,19 @@
             <div id="header_container"><p id="text">IMG</p><p id = "text"><%= usuario.getNome() %></p></div>
         <% }
     %>
-    <div id = "body_container">
+    <div id="body_container">
         <h2>Cadastrar Produto</h2>
+
+        <%-- Exibir mensagem de erro, se existir --%>
+        <% if (request.getAttribute("erro") != null) { %>
+            <p style="color: red; font-weight: bold;"><%= request.getAttribute("erro") %></p>
+        <% } %>
+
         <form action="produtos" method="post">
             Nome: <input type="text" name="nome" required><br>
             Descrição: <input type="text" name="descricao" required><br>
-            Preço: <input type="number" step="0.01" name="preco" required><br>
-            Quantidade: <input type="number" name="quantidade" required><br>
+            Preço: <input type="number" step="0.01" name="preco" min="0" required><br>
+            Quantidade: <input type="number" name="quantidade" min="0" required><br>
             <button type="submit">Cadastrar</button>
         </form>
 
