@@ -5,21 +5,23 @@
 <head>
     <title>Lista de Usuários</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="/style/style.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <h2>Usuários Cadastrados</h2>
-    <ul>
-        <%
-            List<Usuario> usuarios = (List<Usuario>) session.getAttribute("usuarios");
-            if (usuarios != null) {
-                for (Usuario u : usuarios) { %>
-                    <li><%= u.getNome() %> - <%= u.getEmail() %></li>
-        <%      }
-            } else { %>
-                <p>Nenhum usuário cadastrado.</p>
-        <% } %>
-    </ul>
-    <a href="index.jsp">Voltar</a> | <a href="produtos">Ver Produtos</a>
+    <div id = "body_container">
+        <h2>Usuário Cadastrado</h2>
+        <ul>
+            <%
+                Usuario usuario = (Usuario) session.getAttribute("usuario");
+                if (usuario != null) { %>
+                    <li><%= usuario.getNome() %></li>
+                    <li><%= usuario.getEmail() %></li>
+            <%      }
+                } else { %>
+                    <p>Nenhum usuário logado.</p>
+            <% } %>
+        </ul>
+        <a href="index.jsp">Voltar</a> | <a href="produtos">Ver Produtos</a>
+    </div>
 </body>
 </html>

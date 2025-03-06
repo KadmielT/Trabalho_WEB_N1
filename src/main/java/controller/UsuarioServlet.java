@@ -27,13 +27,7 @@ public class UsuarioServlet extends HttpServlet {
         }
 
         Usuario novoUsuario = new Usuario(nome, email, senha);
-
-        List<Usuario> usuarios = (List<Usuario>) request.getSession().getAttribute("usuarios");
-        if (usuarios == null) {
-            usuarios = new ArrayList<>();
-        }
-        usuarios.add(novoUsuario);
-        request.getSession().setAttribute("usuarios", usuarios);
+        request.getSession().setAttribute("usuario", novoUsuario);
 
         response.sendRedirect("produtos"); // Redireciona para a loja
     }
