@@ -19,7 +19,7 @@ public class FinalizarPedidoServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         Carrinho carrinho = (Carrinho) session.getAttribute("carrinho");
-        List<Produto> produtos = (List<Produto>) session.getAttribute("produtos");
+        List<Produto> produtos = (List<Produto>) session.getAttribute("listaProdutos");
 
         if (carrinho != null && produtos != null) {
             for (ItemCarrinho itemCarrinho : carrinho.getItens()) {

@@ -38,7 +38,7 @@ public class CarrinhoServlet extends HttpServlet {
             String nomeProduto = request.getParameter("nomeProduto");
             int quantidade = Integer.parseInt(request.getParameter("quantidade"));
 
-            List<Produto> produtos = (List<Produto>) request.getSession().getAttribute("produtos");
+            List<Produto> produtos = (List<Produto>) request.getSession().getAttribute("listaProdutos");
             Produto produto = produtos.stream().filter(p -> p.getNome().equals(nomeProduto)).findFirst().orElse(null);
 
             if (produto != null && produto.getQuantidade() >= quantidade) {

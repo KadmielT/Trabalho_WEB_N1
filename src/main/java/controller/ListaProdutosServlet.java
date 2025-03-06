@@ -18,6 +18,9 @@ public class ListaProdutosServlet extends HttpServlet {
         List<Produto> produtos = (List<Produto>) request.getSession().getAttribute("listaProdutos");
         if (produtos == null) {
             produtos = new ArrayList<>();
+            produtos.add(new Produto("Notebook", "Notebook Gamer", 4500.00, 10));
+            produtos.add(new Produto("Mouse", "Mouse sem fio", 150.00, 25));
+            produtos.add(new Produto("Teclado", "Teclado mecânico", 350.00, 15));
             request.getSession().setAttribute("listaProdutos", produtos);
         }
         request.setAttribute("listaProdutos", produtos);

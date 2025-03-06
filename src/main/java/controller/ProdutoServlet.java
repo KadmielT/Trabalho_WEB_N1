@@ -15,12 +15,8 @@ import java.util.List;
 public class ProdutoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Produto> produtos = (List<Produto>) request.getSession().getAttribute("produtos");
-        if (produtos == null) {
-            produtos = new ArrayList<>();
-            request.getSession().setAttribute("produtos", produtos);
-        }
-        request.setAttribute("produtos", produtos);
+        List<Produto> produtos = (List<Produto>) request.getSession().getAttribute("listaProdutos");
+        request.setAttribute("listaProdutos", produtos);
         request.getRequestDispatcher("produtos.jsp").forward(request, response);
     }
 
@@ -40,10 +36,7 @@ public class ProdutoServlet extends HttpServlet {
             }
 
             Produto novoProduto = new Produto(nome, descricao, preco, quantidade);
-            List<Produto> produtos = (List<Produto>) request.getSession().getAttribute("produtos");
-            if (produtos == null) {
-                produtos = new ArrayList<>();
-            }
+            List<Produto> produtos = (List<Produto>) request.getSession().getAttribute("listaProdutos");
             produtos.add(novoProduto);
             request.getSession().setAttribute("listaProdutos", produtos);
 
