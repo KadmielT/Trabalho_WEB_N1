@@ -8,6 +8,8 @@
     <title>Lista de Produtos</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="css/style.css?v=<%= System.currentTimeMillis() %>">
+    <!-- Adicionando SweetAlert2 via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <%
@@ -79,6 +81,18 @@
             </ul>
         </div>
     </div>
-<script src="js/script.js"></script>
+    <script src="js/script.js"></script>
+    <script>
+        <% if (session.getAttribute("produtoAdicionado") != null) { %>
+            Swal.fire({
+                position: 'top-end', // Posiciona no canto superior direito
+                icon: 'success',
+                title: "O produto '<%= session.getAttribute("produtoAdicionado") %>' foi adicionado ao carrinho!",
+                timer: 3000, // Desaparece após 3 segundos
+                toast: true // Ativa o modo toast
+            });
+            <% session.removeAttribute("produtoAdicionado"); %>
+        <% } %>
+    </script>
 </body>
 </html>

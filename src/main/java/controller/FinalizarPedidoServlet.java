@@ -9,44 +9,61 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @WebServlet("/finalizarPedido")
 public class FinalizarPedidoServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        Carrinho carrinho = (Carrinho) session.getAttribute("carrinho");
-        List<Produto> produtos = (List<Produto>) session.getAttribute("listaProdutos");
+        Carrinho carrinho = (Carrinho) request.getSession().getAttribute("carrinho");
+        if (carrinho == null || carrinho.getItens().isEmpty()) {
+            response.sendRedirect("carrinho"); // Volta ao carrinho se estiver vazio
+            return;
+        }
 
-        if (carrinho != null && produtos != null) {
-            for (ItemCarrinho itemCarrinho : carrinho.getItens()) {
-                for (Produto p : produtos) {
-                    if (p.getNome().equals(itemCarrinho.getProduto().getNome())) {
-                        p.setQuantidade(p.getQuantidade() - itemCarrinho.getQuantidade()); // Agora sim reduz o estoque!
-                        break;
-                    }
-                }
+        List<Produto> produtos = (List<Produto>) request.getSession().getAttribute("listaProdutos");
+
+        // Verifica se há estoque suficiente para todos os itens antes de finalizar
+        for (ItemCarrinho item : carrinho.getItens()) {
+            Produto produto = produtos.stream()
+                    .filter(p -> p.getNome().equals(item.getProduto().getNome()))
+                    .findFirst().orElse(null);
+            if (produto == null || produto.getQuantidade() < item.getQuantidade()) {
+                request.setAttribute("erro", "Estoque insuficiente para o produto: " + item.getProduto().getNome());
+                request.getRequestDispatcher("carrinho.jsp").forward(request, response);
+                return;
             }
         }
 
-        // Salva o pedido na sessão
-        List<Pedido> pedidos = (List<Pedido>) session.getAttribute("pedidos");
+        // Cria o pedido usando o construtor correto
+        Pedido pedido = new Pedido(new ArrayList<>(carrinho.getItens()), carrinho.getTotal());
+        pedido.setData(new Date());
+
+        // Debita o estoque
+        for (ItemCarrinho item : carrinho.getItens()) {
+            Produto produto = produtos.stream()
+                    .filter(p -> p.getNome().equals(item.getProduto().getNome()))
+                    .findFirst().orElse(null);
+            if (produto != null) {
+                produto.setQuantidade(produto.getQuantidade() - item.getQuantidade());
+            }
+        }
+
+        // Adiciona o pedido à lista de pedidos (assumindo que existe uma lista na sessão)
+        List<Pedido> pedidos = (List<Pedido>) request.getSession().getAttribute("pedidos");
         if (pedidos == null) {
             pedidos = new ArrayList<>();
+            request.getSession().setAttribute("pedidos", pedidos);
         }
-        Pedido novoPedido = new Pedido(carrinho.getItens(), carrinho.getTotal());
-        pedidos.add(novoPedido);
-        session.setAttribute("pedidos", pedidos);
+        pedidos.add(pedido);
 
-        // Limpa o carrinho
-        session.removeAttribute("carrinho");
+        // Limpa o carrinho após finalizar
+        carrinho.getItens().clear();
 
-        // Redirecionar para página de confirmação
-        response.sendRedirect("pedido.jsp");
+        response.sendRedirect("minhasCompras"); // Redireciona para a página de pedidos
     }
 }
