@@ -52,10 +52,10 @@
                         <h3>Pedido #<%= pedidoNum %> - Data: <%= sdf.format(pedido.getData()) %></h3>
                         <ul>
                             <% for (ItemCarrinho item : pedido.getItens()) { %>
-                                <li><%= item.getProduto().getNome() %> - Qtd: <%= item.getQuantidade() %> - Subtotal: R$<%= item.getSubtotal() %></li>
+                                <li><%= item.getProduto().getNome() %> - Qtd: <%= item.getQuantidade() %> - Subtotal: R$ <%= item.exibirSubtotal() %></li>
                             <% } %>
                         </ul>
-                        <p>Total: R$<%= pedido.getTotal() %></p>
+                        <p>Total: R$ <%= pedido.exibirTotal() %></p>
                         <hr>
                     <% pedidoNum++; }
                 } else { %>

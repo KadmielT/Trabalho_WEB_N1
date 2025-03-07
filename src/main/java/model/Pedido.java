@@ -28,6 +28,11 @@ public class Pedido {
         return total;
     }
 
+    public String exibirTotal() {
+        double total = getTotal();
+        return String.format("%.2f", total);
+    }
+
     public Date getData() {
         return data;
     }

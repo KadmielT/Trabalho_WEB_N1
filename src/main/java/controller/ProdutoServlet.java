@@ -28,6 +28,11 @@ public class ProdutoServlet extends HttpServlet {
             double preco = Double.parseDouble(request.getParameter("preco"));
             int quantidade = Integer.parseInt(request.getParameter("quantidade"));
 
+            if (nome != null && !nome.matches("^[^\"']+$")) {
+                request.setAttribute("erro", "O nome não pode conter aspas simples ou aspas duplas.");
+                request.getRequestDispatcher("produtos.jsp").forward(request, response);
+                return;
+            }
 
             if (preco < 0 || quantidade < 0) {
                 request.setAttribute("erro", "Preço e quantidade não podem ser negativos.");
