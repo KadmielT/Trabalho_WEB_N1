@@ -16,10 +16,6 @@ public class Pedido {
         this.data = new Date();
     }
 
-    public Pedido() {
-        
-    }
-
     public List<ItemCarrinho> getItens() {
         return itens;
     }
@@ -30,14 +26,5 @@ public class Pedido {
 
     public Date getData() {
         return data;
-    }
-
-    public void setData(Date date) {
-    }
-
-    public void setItens(ArrayList<ItemCarrinho> itemCarrinhos) {
-    }
-
-    public void setTotal(double total) {
     }
 }
