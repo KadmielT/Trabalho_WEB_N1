@@ -41,23 +41,39 @@
     <div id = "body_container">
         <h2>Carrinho de Compras</h2>
         <ul>
-            <%
-                Carrinho carrinho = (Carrinho) session.getAttribute("carrinho");
+                    <%
+                        Carrinho carrinho = (Carrinho) request.getAttribute("carrinho");
                         if (carrinho != null && !carrinho.getItens().isEmpty()) {
                             for (ItemCarrinho item : carrinho.getItens()) { %>
-                                <li><%= item.getProduto().getNome() %> - R$<%= item.getProduto().getPreco() %> (Qtd: <%= item.getQuantidade() %>)</li>
+                                <li>
+                                    <%= item.getProduto().getNome() %> - R$<%= item.getProduto().getPreco() %> (Qtd: <%= item.getQuantidade() %>) - Subtotal: R$<%= item.getSubtotal() %>
+                                    <!-- Formulário para editar quantidade -->
+                                    <form action="carrinho" method="post" style="display:inline;">
+                                        <input type="hidden" name="acao" value="editar">
+                                        <input type="hidden" name="nomeProduto" value="<%= item.getProduto().getNome() %>">
+                                        <input type="number" name="quantidade" value="<%= item.getQuantidade() %>" min="1" required style="width: 50px;">
+                                        <button type="submit">Atualizar</button>
+                                    </form>
+                                    <!-- Formulário para remover item -->
+                                    <form action="carrinho" method="post" style="display:inline;">
+                                        <input type="hidden" name="acao" value="remover">
+                                        <input type="hidden" name="nomeProduto" value="<%= item.getProduto().getNome() %>">
+                                        <button type="submit">Remover</button>
+                                    </form>
+                                </li>
                     <%      }
                         } else { %>
                             <p>Seu carrinho está vazio.</p>
                     <% } %>
                 </ul>
-
-                <% if (carrinho != null && !carrinho.getItens().isEmpty()) { %>
-                    <form action="finalizarPedido" method="post">
-                        <button type="submit">Finalizar Pedido</button>
-                    </form>
-                <% } %>
-    </div>
-<script src="js/script.js"></script>
-</body>
-</html>
+    <% if (carrinho != null && !carrinho.getItens().isEmpty()) { %>
+                <p>Total: R$<%= carrinho.getTotal() %></p>
+                <form action="finalizarPedido" method="post">
+                    <button type="submit">Finalizar Pedido</button>
+                </form>
+                <a href="listaProdutos">Continuar Comprando</a>
+            <% } %>
+        </div>
+        <script src="js/script.js"></script>
+    </body>
+    </html>
