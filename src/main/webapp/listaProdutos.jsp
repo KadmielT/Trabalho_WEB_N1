@@ -49,26 +49,22 @@
                             <li>
                                 <div id="product_container">
                                     <div id="product_name_container"><%= p.getNome() %></div>
-                                    <div id="product_body_container">
-                                        <div id="product_description_container">
-                                            <%= p.getDescricao() %>
-                                        </div>
-                                        <div id="product_buy_container">
-                                            <div id="product_price_container">
-                                                R$<%= p.getPreco() %>
-                                            </div>
-                                            <div id="product_qtd_container">
-                                                (Qtd: <%= p.getQuantidade() %>)
-                                            </div>
-                                        </div>
+                                    <div id="product_description_container">
+                                        <%= p.getDescricao() %>
                                     </div>
                                     <div id="product_add_to_cart_container">
-                                        <form action="carrinho" method="post" style="display:inline;">
-                                            <input type="hidden" name="acao" value="adicionar">
-                                            <input type="hidden" name="nomeProduto" value="<%= p.getNome() %>">
-                                            <input type="number" name="quantidade" min="1" max="<%= p.getQuantidade() %>" required style="width: 50px;">
-                                            <button type="submit">Adicionar ao Carrinho</button>
-                                        </form>
+                                        <div id="product_price_container">
+                                            <b>R$ <%= p.getPreco() %></b>
+                                        </div>
+                                        <div id="product_form_container">
+                                            Estoque: <%= p.getQuantidade() %>
+                                            <form action="carrinho" method="post" style="display:inline;">
+                                                <input type="hidden" name="acao" value="adicionar">
+                                                <input type="hidden" name="nomeProduto" value="<%= p.getNome() %>">
+                                                <input type="number" name="quantidade" min="1" max="<%= p.getQuantidade() %>" required style="width: 50px;">
+                                                <button type="submit">Adicionar ao Carrinho</button>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </li>

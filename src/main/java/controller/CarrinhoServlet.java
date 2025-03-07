@@ -74,6 +74,6 @@ public class CarrinhoServlet extends HttpServlet {
                 }
             }
         }
-        response.sendRedirect("carrinho"); // Redireciona para o carrinho
+        response.sendRedirect("listaProdutos"); // Redireciona para o carrinho
     }
 }
