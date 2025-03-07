@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Minhas Compras</title>
+    <title>Meus Pedidos</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -16,18 +16,18 @@
         if (usuario != null) { %>
             <div id="header_container">
                 <div id="menu_container">
-                    <a href="produtos">Início</a>
+                    <a href="produtos">Cadastro de Produtos</a>
                     <a href="listaProdutos">Lista de Produtos</a>
-                    <a href="carrinho">Ver Carrinho</a>
                 </div>
                 <div id="menu_container">
-                    <a href="minhasCompras">Minhas Compras</a>
                     <p id="text">IMG</p>
                     <label for="opcoes"></label>
                     <div class="dropdown">
                         <button class="dropbtn"><%= usuario.getNome() %></button>
                         <div class="dropdown-content" id="dropdownMenu">
                             <a href="listar.jsp">Ver Perfil</a>
+                            <a href="carrinho">Ver Carrinho</a>
+                            <a href="minhasCompras">Meus pedidos</a>
                             <a href="index.jsp">Sair</a>
                         </div>
                     </div>
@@ -37,7 +37,7 @@
     %>
     <div id="body_container">
         <div id="minhasCompras">
-            <h2>Minhas Compras Finalizadas</h2>
+            <h2>Meus Pedidos</h2>
             <%
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", new Locale("pt", "BR"));
                 List<Pedido> pedidos = (List<Pedido>) request.getAttribute("pedidos");

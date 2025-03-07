@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Produtos</title>
+    <title>Cadastro de Produtos</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -14,18 +14,18 @@
         if (usuario != null) { %>
             <div id="header_container">
                 <div id="menu_container">
-                    <a href="produtos">Início</a>
+                    <a href="produtos">Cadastro de Produtos</a>
                     <a href="listaProdutos">Lista de Produtos</a>
-                    <a href="carrinho">Ver Carrinho</a>
                 </div>
                 <div id="menu_container">
-                    <a href="minhasCompras">Minhas Compras</a>
                     <p id="text">IMG</p>
                     <label for="opcoes"></label>
                     <div class="dropdown">
                         <button class="dropbtn"><%= usuario.getNome() %></button>
                         <div class="dropdown-content" id="dropdownMenu">
                             <a href="listar.jsp">Ver Perfil</a>
+                            <a href="carrinho">Ver Carrinho</a>
+                            <a href="minhasCompras">Meus pedidos</a>
                             <a href="index.jsp">Sair</a>
                         </div>
                     </div>
@@ -35,7 +35,7 @@
     %>
     <div id="body_container">
         <div id="cadastro_produtos">
-            <h2>Minhas Compras</h2>
+            <h2>Cadastro de Produtos</h2>
 
             <%-- Exibir mensagem de erro, se existir --%>
             <% if (request.getAttribute("erro") != null) { %>
