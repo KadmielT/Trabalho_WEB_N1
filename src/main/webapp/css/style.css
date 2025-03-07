@@ -59,20 +59,21 @@ h2 {
     padding: 5px;
     font-size: 22px;
 }
-#product_body_container {
-    display: flex;
+#product_description_container {
     height: 100px;
     border: solid 1px #c5c5c5;
     background-color: white;
     border-radius: 10px;
-}
-#product_description_container {
-    width: 60%;
     padding: 15px;
 }
+#product_add_to_cart_container {
+    display: flex;
+}
 #product_price_container {
-    height: 50%;
-    padding: 5px;
+    width: 70%;
+    padding: 15px;
+    display: flex;
+    align-items: center;
 }
 input, button {
     margin: 10px 0;
