@@ -1,10 +1,12 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page import="model.Produto, java.util.List" %>
-<%@ page import="model.Usuario, java.util.List" %>
+<%@ page import="model.Pedido, model.ItemCarrinho, java.util.List" %>
+<%@ page import="model.Usuario" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.util.Locale" %>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Minhas compras</title>
+    <title>Minhas Compras</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -13,38 +15,41 @@
         Usuario usuario = (Usuario) session.getAttribute("usuario");
         if (usuario != null) { %>
             <div id="header_container">
-            <div id="menu_container">
-            <a href="produtos">Início</a>
-            <a href="listaProdutos">Lista de Produtos</a>
-            <a href="carrinho">Ver Carrinho</a>
-            </div><div id="menu_container">
-            <a href="minhasCompras">Minhas Compras</a>
-            <p id="text">IMG</p>
-            <p id = "text"><%= usuario.getNome() %>
-            </p><a href="index.jsp">Voltar</a></div></div>
+                <div id="menu_container">
+                    <a href="produtos">Início</a>
+                    <a href="listaProdutos">Lista de Produtos</a>
+                    <a href="carrinho">Ver Carrinho</a>
+                </div>
+                <div id="menu_container">
+                    <a href="minhasCompras">Minhas Compras</a>
+                    <p id="text">IMG</p>
+                    <p id="text"><%= usuario.getNome() %></p>
+                    <a href="index.jsp">Voltar</a>
+                </div>
+            </div>
         <% }
     %>
     <div id="body_container">
         <div id="minhasCompras">
-            <h2>Produtos Disponíveis</h2>
-            <ul>
-                <%
-                    List<Produto> produtos = (List<Produto>) request.getAttribute("minhasCompras");
-                    if (produtos != null && !produtos.isEmpty()) {
-                        for (Produto p : produtos) { %>
-                            <li><%= p.getNome() %> - <%= p.getDescricao() %> - R$<%= p.getPreco() %> (Qtd: <%= p.getQuantidade() %>)
-                                <form action="carrinho" method="post" style="display:inline;">
-                                    <input type="hidden" name="acao" value="adicionar">
-                                    <input type="hidden" name="nomeProduto" value="<%= p.getNome() %>">
-                                    <input type="number" name="quantidade" min="1" max="<%= p.getQuantidade() %>" required style="width: 50px;">
-                                    <button type="submit">Adicionar ao Carrinho</button>
-                                </form>
-                            </li>
-                <%      }
-                    } else { %>
-                        <p>Nenhum produto cadastrado.</p>
+            <h2>Minhas Compras Finalizadas</h2>
+            <%
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", new Locale("pt", "BR"));
+                List<Pedido> pedidos = (List<Pedido>) request.getAttribute("pedidos");
+                if (pedidos != null && !pedidos.isEmpty()) {
+                    int pedidoNum = 1;
+                    for (Pedido pedido : pedidos) { %>
+                        <h3>Pedido #<%= pedidoNum %> - Data: <%= sdf.format(pedido.getData()) %></h3>
+                        <ul>
+                            <% for (ItemCarrinho item : pedido.getItens()) { %>
+                                <li><%= item.getProduto().getNome() %> - Qtd: <%= item.getQuantidade() %> - Subtotal: R$<%= item.getSubtotal() %></li>
+                            <% } %>
+                        </ul>
+                        <p>Total: R$<%= pedido.getTotal() %></p>
+                        <hr>
+                    <% pedidoNum++; }
+                } else { %>
+                    <p>Nenhuma compra realizada ainda.</p>
                 <% } %>
-            </ul>
         </div>
     </div>
 </body>
