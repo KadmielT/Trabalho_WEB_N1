@@ -42,8 +42,10 @@ public class CarrinhoServlet extends HttpServlet {
 
             if (produto != null && produto.getQuantidade() >= quantidade) {
                 carrinho.adicionar(produto, quantidade);
-                produto.setQuantidade(produto.getQuantidade() - quantidade); // Atualiza o estoque
+                produto.setQuantidade(produto.getQuantidade() - quantidade);
+                response.sendRedirect("listaProdutos");
             }
+
         } else if ("remover".equals(acao)) {
             String nomeProduto = request.getParameter("nomeProduto");
             ItemCarrinho itemRemovido = carrinho.getItens().stream()
@@ -55,6 +57,7 @@ public class CarrinhoServlet extends HttpServlet {
                     produto.setQuantidade(produto.getQuantidade() + itemRemovido.getQuantidade()); // Devolve ao estoque
                 }
                 carrinho.remover(nomeProduto);
+                response.sendRedirect("carrinho");
             }
         } else if ("editar".equals(acao)) {
             String nomeProduto = request.getParameter("nomeProduto");
@@ -71,9 +74,9 @@ public class CarrinhoServlet extends HttpServlet {
                         produto.setQuantidade(produto.getQuantidade() - diferenca);
                         item.setQuantidade(novaQuantidade);
                     }
+                    response.sendRedirect("carrinho");
                 }
             }
         }
-        response.sendRedirect("listaProdutos"); // Redireciona para o carrinho
     }
 }
