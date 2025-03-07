@@ -11,22 +11,32 @@
     <%
         Usuario usuario = (Usuario) session.getAttribute("usuario");
         if (usuario != null) { %>
-                    <div id="header_container">
-                    <div id="menu_container">
+            <div id="header_container">
+                <div id="menu_container">
                     <a href="produtos">Início</a>
                     <a href="listaProdutos">Lista de Produtos</a>
                     <a href="carrinho">Ver Carrinho</a>
-                    </div><div id="menu_container">
+                </div>
+                <div id="menu_container">
                     <a href="minhasCompras">Minhas Compras</a>
                     <p id="text">IMG</p>
-                    <p id = "text"><%= usuario.getNome() %>
-                    </p><a href="index.jsp">Voltar</a></div></div>
-                <% }
+                    <label for="opcoes"></label>
+                    <div class="dropdown">
+                        <button class="dropbtn"><%= usuario.getNome() %></button>
+                        <div class="dropdown-content" id="dropdownMenu">
+                            <a href="listar.jsp">Ver Perfil</a>
+                            <a href="index.jsp">Sair</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <% }
     %>
     <div id = "body_container">
         <h2>Pedido finalizado com sucesso!</h2>
         <p>Obrigado pela compra!</p>
         <a href="produtos">Voltar às compras</a>
     </div>
+<script src="js/script.js"></script>
 </body>
 </html>
