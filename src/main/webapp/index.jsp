@@ -4,7 +4,7 @@
 <head>
     <title>MiniLoja</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css?v=<%= System.currentTimeMillis() %>">
 </head>
 <body
     <div id = "body_container">
