@@ -15,7 +15,12 @@ public class Produto {
 
     public String getNome() { return nome; }
     public String getDescricao() { return descricao; }
-    public double getPreco() { return preco; }
+    public double getPreco() {
+        return preco;
+    }
+    public String exibirPreco() {
+        return String.format("%.2f", getPreco());
+    }
     public int getQuantidade() { return quantidade; }
     public void setQuantidade(int quantidade) { this.quantidade = quantidade; }
 }

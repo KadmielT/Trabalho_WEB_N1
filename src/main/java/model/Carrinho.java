@@ -28,4 +28,8 @@ public class Carrinho {
     public double getTotal() {
         return itens.stream().mapToDouble(ItemCarrinho::getSubtotal).sum();
     }
+    public String exibirTotal() {
+        double total = getTotal();
+        return String.format("%.2f", total);
+    }
 }

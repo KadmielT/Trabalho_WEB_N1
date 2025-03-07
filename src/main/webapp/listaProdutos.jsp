@@ -54,7 +54,7 @@
                                     </div>
                                     <div id="product_add_to_cart_container">
                                         <div id="product_price_container">
-                                            <b>R$ <%= p.getPreco() %></b>
+                                            <b>R$ <%= p.exibirPreco() %></b>
                                         </div>
                                         <div id="product_form_container">
                                             Estoque: <%= p.getQuantidade() %>

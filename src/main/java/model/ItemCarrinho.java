@@ -13,4 +13,8 @@ public class ItemCarrinho {
     public int getQuantidade() { return quantidade; }
     public void setQuantidade(int quantidade) { this.quantidade = quantidade; }
     public double getSubtotal() { return produto.getPreco() * quantidade; }
+    public String exibirSubtotal() {
+        double total = getSubtotal();
+        return String.format("%.2f", total);
+    }
 }

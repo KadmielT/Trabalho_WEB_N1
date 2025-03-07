@@ -46,7 +46,7 @@
                         if (carrinho != null && !carrinho.getItens().isEmpty()) {
                             for (ItemCarrinho item : carrinho.getItens()) { %>
                                 <li>
-                                    <%= item.getProduto().getNome() %> - R$<%= item.getProduto().getPreco() %> (Qtd: <%= item.getQuantidade() %>) - Subtotal: R$<%= item.getSubtotal() %>
+                                    <%= item.getProduto().getNome() %> - R$ <%= item.getProduto().exibirPreco() %> (Qtd: <%= item.getQuantidade() %>) - Subtotal: R$ <%= item.exibirSubtotal() %>
                                     <!-- Formulário para editar quantidade -->
                                     <form action="carrinho" method="post" style="display:inline;">
                                         <input type="hidden" name="acao" value="editar">
@@ -67,7 +67,7 @@
                     <% } %>
                 </ul>
     <% if (carrinho != null && !carrinho.getItens().isEmpty()) { %>
-                <p>Total: R$<%= carrinho.getTotal() %></p>
+                <p>Total: R$ <%= carrinho.exibirTotal() %></p>
                 <form action="finalizarPedido" method="post">
                     <button type="submit">Finalizar Pedido</button>
                 </form>
