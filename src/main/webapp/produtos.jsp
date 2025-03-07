@@ -35,7 +35,7 @@
     %>
     <div id="body_container">
         <div id="cadastro_produtos">
-            <h2>Cadastrar Produto</h2>
+            <h2>Minhas Compras</h2>
 
             <%-- Exibir mensagem de erro, se existir --%>
             <% if (request.getAttribute("erro") != null) { %>
