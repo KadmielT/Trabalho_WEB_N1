@@ -4,13 +4,28 @@ body {
     color: black;
     margin: 0px;
 }
+#index_body_container {
+    max-width: 600px;
+    margin: 0 auto;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+#index_body_container > h2 {
+    font-size: 40px;
+}
+#index_body_container > form {
+    padding-bottom: 100px;
+}
 #body_container {
     max-width: 800px;
     margin: 0 auto;
-    padding: 20px;
 }
 h2 {
-    color: black;
+    color: #09a7fc;
+    display: flex;
+    justify-content: center;
 }
 #header_container {
     display: flex;
@@ -28,7 +43,7 @@ h2 {
 #menu_text {
     color: white;
     padding-right: 20px;
-    font-size: 18px;
+    font-size: 16px;
 }
 #center_container {
     display: flex;
@@ -82,7 +97,7 @@ input, button {
     box-sizing: border-box;
     background-color: white;
     border-radius: 15px;
-    border: 1.5px solid rgb(0,0,0);
+    border: 1.5px solid rgb(129 129 129);
     outline: none;
 }
 button {

@@ -7,8 +7,8 @@
     <link rel="stylesheet" type="text/css" href="css/style.css?v=<%= System.currentTimeMillis() %>">
 </head>
 <body
-    <div id = "body_container">
-        <h2>Bem vindo à MiniLoja!</h2>
+    <div id = "index_body_container">
+        <h2>MiniLoja</h2>
         <% if (request.getAttribute("erro") != null) { %>
             <p class="erro"><%= request.getAttribute("erro") %></p>
         <% } %>
