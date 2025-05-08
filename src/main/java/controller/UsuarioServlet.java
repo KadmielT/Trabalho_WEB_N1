@@ -29,27 +29,52 @@ public class UsuarioServlet extends HttpServlet {
             return;
         }
 
-        Usuario novoUsuario = new Usuario();
-        novoUsuario.setNome(nome);
-        novoUsuario.setEmail(email);
-        novoUsuario.setSenha(senha);
-
         EntityManager em = null;
         EntityTransaction tx = null;
 
         try {
             em = JPAUtil.getEntityManager();
-            tx = em.getTransaction();
-            tx.begin();
-            em.persist(novoUsuario);
-            tx.commit();
-            request.getSession().setAttribute("usuario", novoUsuario);
-            response.sendRedirect("listaProdutos"); // Redireciona para a loja
+
+            // Verifica se o usuário já existe
+            Usuario usuarioExistente = em.createQuery("SELECT u FROM Usuario u WHERE u.email = :email", Usuario.class)
+                    .setParameter("email", email)
+                    .getResultStream()
+                    .findFirst()
+                    .orElse(null);
+
+            if (usuarioExistente != null) {
+                // Usuário já existe, verifica a senha
+                if (usuarioExistente.getSenha().equals(senha)) {
+                    // Senha correta, faz login
+                    request.getSession().setAttribute("usuario", usuarioExistente);
+                    response.sendRedirect("listaProdutos");
+                } else {
+                    // Senha incorreta
+                    request.setAttribute("erro", "Senha incorreta para o e-mail informado.");
+                    request.getRequestDispatcher("index.jsp").forward(request, response);
+                }
+            } else {
+                // Novo usuário, salva no banco
+                tx = em.getTransaction();
+                tx.begin();
+
+                Usuario novoUsuario = new Usuario();
+                novoUsuario.setNome(nome);
+                novoUsuario.setEmail(email);
+                novoUsuario.setSenha(senha);
+                em.persist(novoUsuario);
+
+                tx.commit();
+
+                request.getSession().setAttribute("usuario", novoUsuario);
+                response.sendRedirect("listaProdutos");
+            }
+
         } catch (Exception e) {
             if (tx != null && tx.isActive()) {
                 tx.rollback();
             }
-            throw new ServletException("Erro ao cadastrar usuario", e);
+            throw new ServletException("Erro ao cadastrar ou autenticar o usuário", e);
         } finally {
             if (em != null) {
                 em.close();
