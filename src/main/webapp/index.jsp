@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="css/style.css?v=<%= System.currentTimeMillis() %>">
 </head>
-<body
+<body>
     <div id = "index_body_container">
         <h2>MiniLoja</h2>
         <% if (request.getAttribute("erro") != null) { %>

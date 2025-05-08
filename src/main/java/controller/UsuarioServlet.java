@@ -1,6 +1,7 @@
 package controller;
 
 import model.Usuario;
+import utils.JPAUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -8,6 +9,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,9 +29,31 @@ public class UsuarioServlet extends HttpServlet {
             return;
         }
 
-        Usuario novoUsuario = new Usuario(nome, email, senha);
-        request.getSession().setAttribute("usuario", novoUsuario);
+        Usuario novoUsuario = new Usuario();
+        novoUsuario.setNome(nome);
+        novoUsuario.setEmail(email);
+        novoUsuario.setSenha(senha);
 
-        response.sendRedirect("listaProdutos"); // Redireciona para a loja
+        EntityManager em = null;
+        EntityTransaction tx = null;
+
+        try {
+            em = JPAUtil.getEntityManager();
+            tx = em.getTransaction();
+            tx.begin();
+            em.persist(novoUsuario);
+            tx.commit();
+            request.getSession().setAttribute("usuario", novoUsuario);
+            response.sendRedirect("listaProdutos"); // Redireciona para a loja
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            throw new ServletException("Erro ao cadastrar usuario", e);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
     }
 }
