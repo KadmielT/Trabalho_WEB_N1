@@ -8,8 +8,6 @@
     <title>Lista de Produtos</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="css/style.css?v=<%= System.currentTimeMillis() %>">
-    <!-- Adicionando SweetAlert2 via CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <%
@@ -58,15 +56,6 @@
                                         <div id="product_price_container">
                                             <b>R$ <%= p.exibirPreco() %></b>
                                         </div>
-                                        <div id="product_form_container">
-                                            Estoque: <%= p.getQuantidade() %>
-                                            <form action="carrinho" method="post" style="display:inline;">
-                                                <input type="hidden" name="acao" value="adicionar">
-                                                <input type="hidden" name="nomeProduto" value="<%= p.getNome() %>">
-                                                <input type="number" name="quantidade" min="1" max="<%= p.getQuantidade() %>" required style="width: 50px;">
-                                                <button type="submit">Adicionar ao Carrinho</button>
-                                            </form>
-                                        </div>
                                     </div>
                                 </div>
                             </li>
@@ -78,17 +67,5 @@
         </div>
     </div>
     <script src="js/script.js"></script>
-    <script>
-        <% if (session.getAttribute("produtoAdicionado") != null) { %>
-            Swal.fire({
-                position: 'top-end', // Posiciona no canto superior direito
-                icon: 'success',
-                title: "O produto '<%= session.getAttribute("produtoAdicionado") %>' foi adicionado ao carrinho!",
-                timer: 3000, // Desaparece após 3 segundos
-                toast: true // Ativa o modo toast
-            });
-            <% session.removeAttribute("produtoAdicionado"); %>
-        <% } %>
-    </script>
 </body>
 </html>

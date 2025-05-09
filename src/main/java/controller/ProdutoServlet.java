@@ -1,6 +1,7 @@
 package controller;
 
 import model.Produto;
+import dao.ProdutoDAO;  // Importando o DAO
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -8,14 +9,22 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/produtos")
 public class ProdutoServlet extends HttpServlet {
+    private ProdutoDAO produtoDAO;
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        produtoDAO = new ProdutoDAO(); // Inicializando o ProdutoDAO
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Produto> produtos = (List<Produto>) request.getSession().getAttribute("listaProdutos");
+        // Recuperar lista de produtos do banco
+        List<Produto> produtos = produtoDAO.buscarTodos();
         request.setAttribute("listaProdutos", produtos);
         request.getRequestDispatcher("produtos.jsp").forward(request, response);
     }
@@ -41,11 +50,9 @@ public class ProdutoServlet extends HttpServlet {
             }
 
             Produto novoProduto = new Produto(nome, descricao, preco, quantidade);
-            List<Produto> produtos = (List<Produto>) request.getSession().getAttribute("listaProdutos");
-            produtos.add(novoProduto);
-            request.getSession().setAttribute("listaProdutos", produtos);
+            produtoDAO.salvar(novoProduto); // Salvar no banco
 
-            response.sendRedirect("listaProdutos");
+            response.sendRedirect("listaProdutos"); // Redirecionar para lista de produtos
         } catch (NumberFormatException e) {
             request.setAttribute("erro", "Valores inválidos. Verifique os campos preenchidos.");
             request.getRequestDispatcher("produtos.jsp").forward(request, response);
