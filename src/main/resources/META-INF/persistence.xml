@@ -10,6 +10,7 @@
         <!-- Entidades gerenciadas -->
         <class>model.Pedido</class>
         <class>model.Produto</class>
+        <class>model.ItemCarrinho</class> <!-- Adicionando a classe ItemCarrinho -->
 
         <!-- Configurações JDBC -->
         <properties>
