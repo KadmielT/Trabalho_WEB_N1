@@ -3,6 +3,7 @@ package controller;
 import model.Carrinho;
 import model.ItemCarrinho;
 import model.Produto;
+import dao.CarrinhoDAO; // Importando o CarrinhoDAO
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -14,6 +15,14 @@ import java.util.List;
 
 @WebServlet("/carrinho")
 public class CarrinhoServlet extends HttpServlet {
+    private CarrinhoDAO carrinhoDAO;
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        carrinhoDAO = new CarrinhoDAO(); // Inicializa o DAO de carrinho
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Carrinho carrinho = (Carrinho) request.getSession().getAttribute("carrinho");
@@ -21,7 +30,10 @@ public class CarrinhoServlet extends HttpServlet {
             carrinho = new Carrinho();
             request.getSession().setAttribute("carrinho", carrinho);
         }
-        // Carrinho já está na sessão, o JSP irá buscar diretamente de lá.
+
+        // Persiste o carrinho
+        carrinhoDAO.salvar(carrinho); // Persiste o estado atual do carrinho no banco
+
         request.getRequestDispatcher("carrinho.jsp").forward(request, response);
     }
 
@@ -49,11 +61,12 @@ public class CarrinhoServlet extends HttpServlet {
             if (produto != null && produto.getQuantidade() >= quantidade) {
                 carrinho.adicionar(produto, quantidade);
                 produto.setQuantidade(produto.getQuantidade() - quantidade); // Reduz estoque
+                carrinhoDAO.salvar(carrinho); // Persiste o carrinho
                 request.getSession().setAttribute("produtoAdicionado", nomeProduto);
             }
-            request.setAttribute("listaProdutos", produtos); // envia lista para a tela
-            request.getRequestDispatcher("listaProdutos.jsp").forward(request, response); // permanece na tela
 
+            request.setAttribute("listaProdutos", produtos); // Envia lista para a tela
+            request.getRequestDispatcher("listaProdutos.jsp").forward(request, response); // Permanece na tela
 
         } else if ("remover".equals(acao)) {
             String nomeProduto = request.getParameter("nomeProduto");
@@ -74,6 +87,7 @@ public class CarrinhoServlet extends HttpServlet {
                 }
 
                 carrinho.remover(nomeProduto);
+                carrinhoDAO.salvar(carrinho); // Persiste o carrinho atualizado
             }
 
             response.sendRedirect("carrinho");
@@ -109,6 +123,7 @@ public class CarrinhoServlet extends HttpServlet {
                         produto.setQuantidade(produto.getQuantidade() + (-diferenca)); // Devolve ao estoque
                     }
                 }
+                carrinhoDAO.salvar(carrinho); // Persiste a edição no carrinho
             }
 
             response.sendRedirect("carrinho");
