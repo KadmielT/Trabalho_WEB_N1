@@ -7,15 +7,14 @@ import model.Produto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
+import utils.JPAUtil;
 
 import java.util.List;
 
 public class CarrinhoDAO {
-    private EntityManager em;
+    private EntityManager em = JPAUtil.getEntityManager();
 
-    public CarrinhoDAO() {
-        em = Persistence.createEntityManagerFactory("usuarioPU").createEntityManager();
-    }
+    public CarrinhoDAO() {}
 
     public void salvar(Carrinho carrinho) {
         EntityTransaction transaction = em.getTransaction();
@@ -40,7 +39,7 @@ public class CarrinhoDAO {
         try {
             transaction.begin();
             if (item.getProduto() != null) {
-                em.persist(item); // Salva o item no carrinho
+                em.persist(item);
             }
             transaction.commit();
         } catch (RuntimeException e) {
@@ -73,7 +72,6 @@ public class CarrinhoDAO {
         try {
             transaction.begin();
 
-            // Garante que o item está sendo gerenciado pela JPA antes de remover
             ItemCarrinho itemGerenciado = em.contains(item) ? item : em.merge(item);
             em.remove(itemGerenciado);
 
