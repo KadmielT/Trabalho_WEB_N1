@@ -28,6 +28,7 @@ public class ListaProdutosServlet extends HttpServlet {
 
         // Envia para a tela de listagem
         request.setAttribute("listaProdutos", produtos);
+        request.getSession().setAttribute("listaProdutos", produtos);
         request.getRequestDispatcher("listaProdutos.jsp").forward(request, response);
     }
 }
