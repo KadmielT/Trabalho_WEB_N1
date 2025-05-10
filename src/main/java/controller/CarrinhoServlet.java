@@ -3,7 +3,8 @@ package controller;
 import model.Carrinho;
 import model.ItemCarrinho;
 import model.Produto;
-import dao.CarrinhoDAO; // Importando o CarrinhoDAO
+import model.Usuario;
+import dao.CarrinhoDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -20,36 +21,50 @@ public class CarrinhoServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-        carrinhoDAO = new CarrinhoDAO(); // Inicializa o DAO de carrinho
+        carrinhoDAO = new CarrinhoDAO();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Carrinho carrinho = (Carrinho) request.getSession().getAttribute("carrinho");
-        if (carrinho == null) {
-            carrinho = new Carrinho();
-            request.getSession().setAttribute("carrinho", carrinho);
+        Usuario usuario = (Usuario) request.getSession().getAttribute("usuario");
+
+        if (usuario == null) {
+            response.sendRedirect("login.jsp");
+            return;
         }
 
-        // Persiste o carrinho
-        carrinhoDAO.salvar(carrinho); // Persiste o estado atual do carrinho no banco
+        Carrinho carrinho = carrinhoDAO.buscarPorUsuarioId(usuario.getId());
 
+        if (carrinho == null) {
+            carrinho = new Carrinho();
+            carrinho.setUsuario(usuario);
+            carrinhoDAO.salvar(carrinho);  // Salva um carrinho vazio inicialmente, se necessário.
+        }
+
+        request.setAttribute("carrinho", carrinho);
         request.getRequestDispatcher("carrinho.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String acao = request.getParameter("acao");
+        Usuario usuario = (Usuario) request.getSession().getAttribute("usuario");
 
-        Carrinho carrinho = (Carrinho) request.getSession().getAttribute("carrinho");
+        if (usuario == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+
+        Carrinho carrinho = carrinhoDAO.buscarPorUsuarioId(usuario.getId());
         if (carrinho == null) {
             carrinho = new Carrinho();
-            request.getSession().setAttribute("carrinho", carrinho);
+            carrinho.setUsuario(usuario);
         }
 
         List<Produto> produtos = (List<Produto>) request.getSession().getAttribute("listaProdutos");
 
         if ("adicionar".equals(acao)) {
+            // Lógica para adicionar um item
             String nomeProduto = request.getParameter("nomeProduto");
             int quantidade = Integer.parseInt(request.getParameter("quantidade"));
 
@@ -60,39 +75,51 @@ public class CarrinhoServlet extends HttpServlet {
 
             if (produto != null && produto.getQuantidade() >= quantidade) {
                 carrinho.adicionar(produto, quantidade);
-                produto.setQuantidade(produto.getQuantidade() - quantidade); // Reduz estoque
-                carrinhoDAO.salvar(carrinho); // Persiste o carrinho
+                produto.setQuantidade(produto.getQuantidade() - quantidade);
+                carrinhoDAO.salvar(carrinho);
                 request.getSession().setAttribute("produtoAdicionado", nomeProduto);
             }
 
-            request.setAttribute("listaProdutos", produtos); // Envia lista para a tela
-            request.getRequestDispatcher("listaProdutos.jsp").forward(request, response); // Permanece na tela
+            request.setAttribute("listaProdutos", produtos);
+            request.getRequestDispatcher("listaProdutos.jsp").forward(request, response);
 
         } else if ("remover".equals(acao)) {
             String nomeProduto = request.getParameter("nomeProduto");
 
+            // Encontrar o item do carrinho com base no nome do produto
             ItemCarrinho itemRemovido = carrinho.getItens().stream()
                     .filter(item -> item.getProduto().getNome().equals(nomeProduto))
                     .findFirst()
                     .orElse(null);
 
             if (itemRemovido != null) {
+                // Atualiza a quantidade do produto de volta
                 Produto produto = produtos.stream()
                         .filter(p -> p.getNome().equals(nomeProduto))
                         .findFirst()
                         .orElse(null);
 
                 if (produto != null) {
-                    produto.setQuantidade(produto.getQuantidade() + itemRemovido.getQuantidade()); // Devolve estoque
+                    produto.setQuantidade(produto.getQuantidade() + itemRemovido.getQuantidade());
                 }
 
+
+                // Remove o item do carrinho (em memória)
                 carrinho.remover(nomeProduto);
-                carrinhoDAO.salvar(carrinho); // Persiste o carrinho atualizado
+
+                // Remove o item do banco
+                carrinhoDAO.removerItem(itemRemovido);
+
+                // Atualiza o carrinho (caso queira manter sincronizado no banco)
+                carrinhoDAO.salvar(carrinho);
+
+
+                // Redireciona para a página do carrinho após a remoção
+                response.sendRedirect("carrinho");
             }
 
-            response.sendRedirect("carrinho");
-
         } else if ("editar".equals(acao)) {
+            // Lógica para editar a quantidade de um item
             String nomeProduto = request.getParameter("nomeProduto");
             int novaQuantidade = Integer.parseInt(request.getParameter("quantidade"));
 
@@ -112,18 +139,17 @@ public class CarrinhoServlet extends HttpServlet {
                     int diferenca = novaQuantidade - quantidadeAtual;
 
                     if (diferenca > 0) {
-                        // Aumentando quantidade no carrinho
                         if (produto.getQuantidade() >= diferenca) {
                             item.setQuantidade(novaQuantidade);
-                            produto.setQuantidade(produto.getQuantidade() - diferenca); // Diminui do estoque
+                            produto.setQuantidade(produto.getQuantidade() - diferenca);
                         }
                     } else if (diferenca < 0) {
-                        // Reduzindo quantidade no carrinho
                         item.setQuantidade(novaQuantidade);
-                        produto.setQuantidade(produto.getQuantidade() + (-diferenca)); // Devolve ao estoque
+                        produto.setQuantidade(produto.getQuantidade() + (-diferenca));
                     }
                 }
-                carrinhoDAO.salvar(carrinho); // Persiste a edição no carrinho
+
+                carrinhoDAO.salvar(carrinho);
             }
 
             response.sendRedirect("carrinho");
