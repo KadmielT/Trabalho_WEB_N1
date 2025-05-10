@@ -15,11 +15,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+
 @WebServlet("/finalizarPedido")
 public class FinalizarPedidoServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Carrinho carrinho = (Carrinho) request.getSession().getAttribute("carrinho");
+        System.out.println(carrinho);
         if (carrinho == null || carrinho.getItens().isEmpty()) {
             response.sendRedirect("carrinho"); // Volta ao carrinho se estiver vazio
             return;

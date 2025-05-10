@@ -43,6 +43,7 @@
         <ul>
             <%
                 Carrinho carrinho = (Carrinho) request.getAttribute("carrinho");
+                request.getSession().setAttribute("carrinho", carrinho);
                 if (carrinho != null && !carrinho.getItens().isEmpty()) {
                     for (ItemCarrinho item : carrinho.getItens()) { %>
                         <li>
@@ -72,7 +73,6 @@
             <form action="finalizarPedido" method="post">
                 <button type="submit">Finalizar Pedido</button>
             </form>
-            <a href="listaProdutos">Continuar Comprando</a>
         <% } %>
     </div>
     <script src="js/script.js"></script>
