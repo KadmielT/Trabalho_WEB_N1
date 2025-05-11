@@ -7,9 +7,11 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.Usuario;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @WebServlet("/produtos")
 public class ProdutoServlet extends HttpServlet {
@@ -23,10 +25,20 @@ public class ProdutoServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Recuperar lista de produtos do banco
-        List<Produto> produtos = produtoDAO.buscarTodos();
-        request.setAttribute("listaProdutos", produtos);
-        request.getRequestDispatcher("produtos.jsp").forward(request, response);
+        Usuario usuario = (Usuario) request.getSession().getAttribute("usuario");
+        if (usuario == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+
+        if (!Objects.equals(usuario.getEmail(), "admin@email.com")) {
+            request.getRequestDispatcher("listaProdutos.jsp").forward(request, response);
+        } else {
+            // Recuperar lista de produtos do banco
+            List<Produto> produtos = produtoDAO.buscarTodos();
+            request.setAttribute("listaProdutos", produtos);
+            request.getRequestDispatcher("produtos.jsp").forward(request, response);
+        }
     }
 
     @Override
@@ -52,7 +64,7 @@ public class ProdutoServlet extends HttpServlet {
             Produto novoProduto = new Produto(nome, descricao, preco, quantidade);
             produtoDAO.salvar(novoProduto); // Salvar no banco
 
-            response.sendRedirect("listaProdutos"); // Redirecionar para lista de produtos
+            response.sendRedirect("listaProdutosAdmin"); // Redirecionar para lista de produtos
         } catch (NumberFormatException e) {
             request.setAttribute("erro", "Valores inválidos. Verifique os campos preenchidos.");
             request.getRequestDispatcher("produtos.jsp").forward(request, response);

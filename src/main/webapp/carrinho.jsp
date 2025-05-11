@@ -15,7 +15,6 @@
         if (usuario != null) { %>
             <div id="header_container">
                 <div id="menu_container">
-                    <a href="produtos" id="menu_text">Cadastro de Produtos</a>
                     <a href="listaProdutos" id="menu_text">Lista de Produtos</a>
                 </div>
                 <div id="menu_container">

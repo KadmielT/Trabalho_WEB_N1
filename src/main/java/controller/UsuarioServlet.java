@@ -46,8 +46,13 @@ public class UsuarioServlet extends HttpServlet {
                 // Usuário já existe, verifica a senha
                 if (usuarioExistente.getSenha().equals(senha)) {
                     // Senha correta, faz login
-                    request.getSession().setAttribute("usuario", usuarioExistente);
-                    response.sendRedirect("listaProdutos");
+                    if (usuarioExistente.getEmail().equals("admin@email.com")) {
+                        request.getSession().setAttribute("usuario", usuarioExistente);
+                        response.sendRedirect("listaProdutosAdmin");
+                    } else {
+                        request.getSession().setAttribute("usuario", usuarioExistente);
+                        response.sendRedirect("listaProdutos");
+                    }
                 } else {
                     // Senha incorreta
                     request.setAttribute("erro", "Senha incorreta para o e-mail informado.");
@@ -66,8 +71,13 @@ public class UsuarioServlet extends HttpServlet {
 
                 tx.commit();
 
-                request.getSession().setAttribute("usuario", novoUsuario);
-                response.sendRedirect("listaProdutos");
+                if (novoUsuario.getEmail().equals("admin@email.com")) {
+                    request.getSession().setAttribute("usuario", novoUsuario);
+                    response.sendRedirect("listaProdutosAdmin");
+                } else {
+                    request.getSession().setAttribute("usuario", novoUsuario);
+                    response.sendRedirect("listaProdutos");
+                }
             }
 
         } catch (Exception e) {

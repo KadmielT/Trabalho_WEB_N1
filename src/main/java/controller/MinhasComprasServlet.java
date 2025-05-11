@@ -11,6 +11,7 @@ import model.Usuario;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @WebServlet("/minhasCompras")
 public class MinhasComprasServlet extends HttpServlet {
@@ -31,16 +32,20 @@ public class MinhasComprasServlet extends HttpServlet {
             return;
         }
 
-        // Recupera o ID do usuário logado
-        int usuarioId = usuario.getId();
+        if (Objects.equals(usuario.getEmail(), "admin@email.com")) {
+            request.getRequestDispatcher("listaProdutosAdmin.jsp").forward(request, response);
+        } else {
+            // Recupera o ID do usuário logado
+            int usuarioId = usuario.getId();
 
-        // Carrega os pedidos do banco de dados
-        List<Pedido> pedidos = pedidoDAO.buscarPedidosPorUsuarioId(usuarioId);
+            // Carrega os pedidos do banco de dados
+            List<Pedido> pedidos = pedidoDAO.buscarPedidosPorUsuarioId(usuarioId);
 
-        // Define os pedidos como atributo na requisição
-        request.setAttribute("pedidos", pedidos);
+            // Define os pedidos como atributo na requisição
+            request.setAttribute("pedidos", pedidos);
 
-        // Encaminha para o JSP
-        request.getRequestDispatcher("minhasCompras.jsp").forward(request, response);
+            // Encaminha para o JSP
+            request.getRequestDispatcher("minhasCompras.jsp").forward(request, response);
+        }
     }
 }

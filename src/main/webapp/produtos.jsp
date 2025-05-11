@@ -16,7 +16,7 @@
             <div id="header_container">
                 <div id="menu_container">
                     <a href="produtos" id="menu_text">Cadastro de Produtos</a>
-                    <a href="listaProdutos" id="menu_text">Lista de Produtos</a>
+                    <a href="listaProdutosAdmin" id="menu_text">Lista de Produtos</a>
                 </div>
                 <div id="menu_container">
                     <%
@@ -28,9 +28,6 @@
                     <div class="dropdown">
                         <button class="dropbtn"><%= nome %></button>
                         <div class="dropdown-content" id="dropdownMenu">
-                            <a href="listar.jsp">Ver Perfil</a>
-                            <a href="carrinho">Ver Carrinho</a>
-                            <a href="minhasCompras">Meus pedidos</a>
                             <a href="index.jsp">Sair</a>
                         </div>
                     </div>

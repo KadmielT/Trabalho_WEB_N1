@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @WebServlet("/carrinho")
@@ -34,26 +35,30 @@ public class CarrinhoServlet extends HttpServlet {
             return;
         }
 
-        Carrinho carrinho = carrinhoDAO.buscarPorUsuarioId(usuario.getId());
+        if (Objects.equals(usuario.getEmail(), "admin@email.com")) {
+            request.getRequestDispatcher("listaProdutosAdmin.jsp").forward(request, response);
+        } else {
+            Carrinho carrinho = carrinhoDAO.buscarPorUsuarioId(usuario.getId());
 
-        if (carrinho == null) {
-            carrinho = new Carrinho();
-            carrinho.setUsuario(usuario);
-            carrinhoDAO.salvar(carrinho);  // Salva o carrinho vazio, agora o id será gerado
-            carrinho = carrinhoDAO.buscarPorUsuarioId(usuario.getId());  // Recupera o carrinho com o id gerado
+            if (carrinho == null) {
+                carrinho = new Carrinho();
+                carrinho.setUsuario(usuario);
+                carrinhoDAO.salvar(carrinho);  // Salva o carrinho vazio, agora o id será gerado
+                carrinho = carrinhoDAO.buscarPorUsuarioId(usuario.getId());
+            }
+
+            // Filtra os itens para mostrar apenas aqueles que possuem id_carrinho != null
+            List<ItemCarrinho> itensValidos = carrinho.getItens().stream()
+                    .filter(item -> item.getCarrinho() != null && item.getCarrinho().getId() != null)
+                    .collect(Collectors.toList());
+
+
+            // Atualiza a lista de itens no carrinho com os itens válidos
+            carrinho.setItens(itensValidos);
+
+            request.setAttribute("carrinho", carrinho);
+            request.getRequestDispatcher("carrinho.jsp").forward(request, response);
         }
-
-        // Filtra os itens para mostrar apenas aqueles que possuem id_carrinho != null
-        List<ItemCarrinho> itensValidos = carrinho.getItens().stream()
-                .filter(item -> item.getCarrinho() != null && item.getCarrinho().getId() != null)
-                .collect(Collectors.toList()); // <- cria uma lista mutável
-
-
-        // Atualiza a lista de itens no carrinho com os itens válidos
-        carrinho.setItens(itensValidos);
-
-        request.setAttribute("carrinho", carrinho);
-        request.getRequestDispatcher("carrinho.jsp").forward(request, response);
     }
 
     @Override

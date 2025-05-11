@@ -1,7 +1,7 @@
 package controller;
 
 import model.Produto;
-import dao.ProdutoDAO;  // <- Importação do DAO
+import dao.ProdutoDAO;  //
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -13,8 +13,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-@WebServlet("/listaProdutos")
-public class ListaProdutosServlet extends HttpServlet {
+@WebServlet("/listaProdutosAdmin")
+public class ListaProdutosAdminServlet extends HttpServlet {
     private ProdutoDAO produtoDAO;
 
     @Override
@@ -32,8 +32,8 @@ public class ListaProdutosServlet extends HttpServlet {
             return;
         }
 
-        if (Objects.equals(usuario.getEmail(), "admin@email.com")) {
-            request.getRequestDispatcher("listaProdutosAdmin.jsp").forward(request, response);
+        if (!Objects.equals(usuario.getEmail(), "admin@email.com")) {
+            request.getRequestDispatcher("listaProdutos.jsp").forward(request, response);
         } else {
             // Busca os produtos do banco de dados
             List<Produto> produtos = produtoDAO.buscarTodos();
@@ -41,7 +41,7 @@ public class ListaProdutosServlet extends HttpServlet {
             // Envia para a tela de listagem
             request.setAttribute("listaProdutos", produtos);
             request.getSession().setAttribute("listaProdutos", produtos);
-            request.getRequestDispatcher("listaProdutos.jsp").forward(request, response);
+            request.getRequestDispatcher("listaProdutosAdmin.jsp").forward(request, response);
         }
     }
 }
