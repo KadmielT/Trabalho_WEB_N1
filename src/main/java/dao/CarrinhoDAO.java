@@ -3,10 +3,8 @@ package dao;
 import jakarta.persistence.TypedQuery;
 import model.Carrinho;
 import model.ItemCarrinho;
-import model.Produto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.Persistence;
 import utils.JPAUtil;
 
 import java.util.List;
@@ -20,8 +18,9 @@ public class CarrinhoDAO {
         EntityTransaction transaction = em.getTransaction();
         try {
             transaction.begin();
-            if (carrinho.getId() == 0) {
-                em.persist(carrinho); // Salva um novo carrinho
+            // Verifica se o carrinho não tem id, indicando que é novo
+            if (carrinho.getId() == null) {
+                em.persist(carrinho); // Persiste um novo carrinho
             } else {
                 em.merge(carrinho); // Atualiza um carrinho existente
             }
@@ -39,7 +38,7 @@ public class CarrinhoDAO {
         try {
             transaction.begin();
             if (item.getProduto() != null) {
-                em.persist(item);
+                em.persist(item); // Persiste o item do carrinho
             }
             transaction.commit();
         } catch (RuntimeException e) {
@@ -59,28 +58,28 @@ public class CarrinhoDAO {
 
             List<Carrinho> resultados = query.getResultList();
             if (!resultados.isEmpty()) {
-                return resultados.get(0);
+                return resultados.get(0); // Retorna o primeiro carrinho encontrado
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(); // Imprime o erro se ocorrer
         }
-        return null;
+        return null; // Retorna null caso não encontre carrinho
     }
 
     public void removerItem(ItemCarrinho item) {
         EntityTransaction transaction = em.getTransaction();
         try {
             transaction.begin();
-
+            // Verifica se o item já está gerenciado pelo EntityManager
             ItemCarrinho itemGerenciado = em.contains(item) ? item : em.merge(item);
-            em.remove(itemGerenciado);
+            em.remove(itemGerenciado); // Remove o item do carrinho
 
             transaction.commit();
         } catch (RuntimeException e) {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
-            throw e;
+            throw e; // Lança novamente a exceção
         }
     }
 }

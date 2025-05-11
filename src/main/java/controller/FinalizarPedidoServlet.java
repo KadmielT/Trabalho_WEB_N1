@@ -1,9 +1,12 @@
 package controller;
 
+import dao.PedidoDAO;
+import dao.ProdutoDAO;
 import model.Carrinho;
 import model.ItemCarrinho;
 import model.Pedido;
 import model.Produto;
+import model.Usuario;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -15,57 +18,77 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
 @WebServlet("/finalizarPedido")
 public class FinalizarPedidoServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Carrinho carrinho = (Carrinho) request.getSession().getAttribute("carrinho");
-        System.out.println(carrinho);
-        if (carrinho == null || carrinho.getItens().isEmpty()) {
-            response.sendRedirect("carrinho"); // Volta ao carrinho se estiver vazio
+        Usuario usuario = (Usuario) request.getSession().getAttribute("usuario");
+
+        if (carrinho == null || carrinho.getItens().isEmpty() || usuario == null) {
+            response.sendRedirect("carrinho"); // Volta ao carrinho se inválido
             return;
         }
 
-        List<Produto> produtos = (List<Produto>) request.getSession().getAttribute("listaProdutos");
+        ProdutoDAO produtoDAO = new ProdutoDAO();
+        PedidoDAO pedidoDAO = new PedidoDAO();
 
-        // Verifica se há estoque suficiente para todos os itens antes de finalizar
+        // Verifica estoque
         for (ItemCarrinho item : carrinho.getItens()) {
-            Produto produto = produtos.stream()
-                    .filter(p -> p.getNome().equals(item.getProduto().getNome()))
+            Produto produtoAtualizado = produtoDAO.buscarTodos().stream()
+                    .filter(p -> p.getId() == item.getProduto().getId())
                     .findFirst().orElse(null);
-            if (produto == null || produto.getQuantidade() < item.getQuantidade()) {
+
+            if (produtoAtualizado == null || produtoAtualizado.getQuantidade() < item.getQuantidade()) {
                 request.setAttribute("erro", "Estoque insuficiente para o produto: " + item.getProduto().getNome());
                 request.getRequestDispatcher("carrinho.jsp").forward(request, response);
                 return;
             }
         }
 
-        // Cria o pedido usando o construtor correto
-        Pedido pedido = new Pedido(new ArrayList<>(carrinho.getItens()), carrinho.getTotal());
-        pedido.setData(new Date());
-
-        // Debita o estoque
+        // Atualiza estoque no banco
         for (ItemCarrinho item : carrinho.getItens()) {
-            Produto produto = produtos.stream()
-                    .filter(p -> p.getNome().equals(item.getProduto().getNome()))
+            Produto produtoAtualizado = produtoDAO.buscarTodos().stream()
+                    .filter(p -> p.getId() == item.getProduto().getId())
                     .findFirst().orElse(null);
-            if (produto != null) {
-                produto.setQuantidade(produto.getQuantidade() - item.getQuantidade());
+
+            if (produtoAtualizado != null) {
+                produtoAtualizado.setQuantidade(produtoAtualizado.getQuantidade() - item.getQuantidade());
+                produtoDAO.salvar(produtoAtualizado); // merge via DAO
             }
         }
 
-        // Adiciona o pedido à lista de pedidos (assumindo que existe uma lista na sessão)
-        List<Pedido> pedidos = (List<Pedido>) request.getSession().getAttribute("pedidos");
-        if (pedidos == null) {
-            pedidos = new ArrayList<>();
-            request.getSession().setAttribute("pedidos", pedidos);
+        // Cria o pedido com dados do carrinho
+        List<ItemCarrinho> itensClonados = new ArrayList<>();
+        for (ItemCarrinho item : carrinho.getItens()) {
+            Produto produtoOriginal = item.getProduto();
+
+            Produto produtoClonado = new Produto();
+            produtoClonado.setId(produtoOriginal.getId()); // importante para evitar persistência como novo
+            produtoClonado.setNome(produtoOriginal.getNome());
+            produtoClonado.setPreco(produtoOriginal.getPreco());
+            produtoClonado.setQuantidade(produtoOriginal.getQuantidade());
+
+            ItemCarrinho itemClonado = new ItemCarrinho();
+            itemClonado.setProduto(produtoClonado);
+            itemClonado.setQuantidade(item.getQuantidade());
+
+            itensClonados.add(itemClonado);
         }
-        pedidos.add(pedido);
 
-        // Limpa o carrinho após finalizar
+        Pedido pedido = new Pedido();
+        pedido.setUsuario(usuario);
+        pedido.setData(new Date());
+        pedido.setItens(itensClonados);
+        pedido.setTotal(carrinho.getTotal());
+
+        // Persiste o pedido e os itens associados
+        pedidoDAO.salvarPedido(pedido);
+
+        // Limpa carrinho
         carrinho.getItens().clear();
+        request.getSession().setAttribute("carrinho", carrinho);
 
-        response.sendRedirect("minhasCompras"); // Redireciona para a página de pedidos
+        response.sendRedirect("minhasCompras");
     }
 }

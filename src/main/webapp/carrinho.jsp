@@ -45,27 +45,35 @@
                 Carrinho carrinho = (Carrinho) request.getAttribute("carrinho");
                 request.getSession().setAttribute("carrinho", carrinho);
                 if (carrinho != null && !carrinho.getItens().isEmpty()) {
-                    for (ItemCarrinho item : carrinho.getItens()) { %>
-                        <li>
-                            <%= item.getProduto().getNome() %> - R$ <%= item.getProduto().exibirPreco() %> (Qtd: <%= item.getQuantidade() %>) - Subtotal: R$ <%= item.exibirSubtotal() %>
-                            <!-- Formulário para editar quantidade -->
-                            <form action="carrinho" method="post" style="display:inline;">
-                                <input type="hidden" name="acao" value="editar">
-                                <input type="hidden" name="nomeProduto" value="<%= item.getProduto().getNome() %>">
-                                <input type="number" name="quantidade" value="<%= item.getQuantidade() %>" min="1" required style="width: 50px;">
-                                <button type="submit">Atualizar</button>
-                            </form>
-                            <!-- Formulário para remover item -->
-                            <form action="carrinho" method="post" style="display:inline;">
-                                <input type="hidden" name="acao" value="remover">
-                                <input type="hidden" name="nomeProduto" value="<%= item.getProduto().getNome() %>">
-                                <button type="submit">Remover</button>
-                            </form>
-                        </li>
-            <%      }
-                } else { %>
-                    <p>Seu carrinho está vazio.</p>
-            <% } %>
+                    for (ItemCarrinho item : carrinho.getItens()) {
+                        if (item.getCarrinho() != null && item.getCarrinho().getId() != null) {  // Verificação extra aqui
+            %>
+            <li>
+                <%= item.getProduto().getNome() %> - R$ <%= item.getProduto().exibirPreco() %> (Qtd: <%= item.getQuantidade() %>) - Subtotal: R$ <%= item.exibirSubtotal() %>
+                <!-- Formulário para editar quantidade -->
+                <form action="carrinho" method="post" style="display:inline;">
+                    <input type="hidden" name="acao" value="editar">
+                    <input type="hidden" name="nomeProduto" value="<%= item.getProduto().getNome() %>">
+                    <input type="number" name="quantidade" value="<%= item.getQuantidade() %>" min="1" required style="width: 50px;">
+                    <button type="submit">Atualizar</button>
+                </form>
+                <!-- Formulário para remover item -->
+                <form action="carrinho" method="post" style="display:inline;">
+                    <input type="hidden" name="acao" value="remover">
+                    <input type="hidden" name="nomeProduto" value="<%= item.getProduto().getNome() %>">
+                    <button type="submit">Remover</button>
+                </form>
+            </li>
+            <%
+                    }
+                }
+            } else {
+            %>
+            <p>Seu carrinho está vazio.</p>
+            <%
+                }
+            %>
+
         </ul>
 
         <% if (carrinho != null && !carrinho.getItens().isEmpty()) { %>

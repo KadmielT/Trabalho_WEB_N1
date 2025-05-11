@@ -16,6 +16,11 @@ public class ItemCarrinho {
     @JoinColumn(name = "id_produto")
     private Produto produto;
 
+    @ManyToOne
+    @JoinColumn(name = "id_pedido")
+    private Pedido pedido;
+
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_carrinho")  // Chave estrangeira para Carrinho
     private Carrinho carrinho;  // Relacionamento com a classe Carrinho
@@ -33,9 +38,22 @@ public class ItemCarrinho {
         this.quantidade = quantidade;
     }
 
+    public void setProduto(Produto produto) {
+        this.produto = produto;
+    }
+
     public Produto getProduto() {
         return produto;
     }
+
+    public Pedido getPedido() {
+        return pedido;
+    }
+
+    public void setPedido(Pedido pedido) {
+        this.pedido = pedido;
+    }
+
 
     public int getQuantidade() {
         return quantidade;

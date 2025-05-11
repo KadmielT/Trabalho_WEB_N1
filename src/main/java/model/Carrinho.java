@@ -2,6 +2,7 @@ package model;
 
 import jakarta.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -9,7 +10,7 @@ public class Carrinho {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario")  // A coluna no banco de dados que faz referência ao usuário
@@ -21,6 +22,11 @@ public class Carrinho {
     public Carrinho() {
         this.itens = new ArrayList<>();
     }
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "data_criacao")
+    private Date dataCriacao = new Date(); // ou defina via construtor
+
 
     public void adicionar(Produto produto, int quantidade) {
         for (ItemCarrinho item : itens) {
@@ -41,6 +47,10 @@ public class Carrinho {
         return itens;
     }
 
+    public void setItens(List<ItemCarrinho> itens) {
+        this.itens = itens;
+    }
+
     public double getTotal() {
         return itens.stream().mapToDouble(ItemCarrinho::getSubtotal).sum();
     }
@@ -51,7 +61,7 @@ public class Carrinho {
     }
 
     // Getters and Setters
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 

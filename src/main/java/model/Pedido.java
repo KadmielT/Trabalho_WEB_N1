@@ -1,35 +1,80 @@
 package model;
 
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
+@Entity
+@Table(name = "pedido")
 public class Pedido {
-    private List<ItemCarrinho> itens;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @ManyToOne
+    @JoinColumn(name = "id_usuario", nullable = false)
+    private Usuario usuario;
+
+    @Column(name = "total")
     private double total;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "data")
     private Date data;
 
-    public Pedido(List<ItemCarrinho> itens, double total) {
-        this.itens = new ArrayList<>(itens);
-        this.total = total;
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<ItemCarrinho> itens;
+
+    public Pedido() {
         this.data = new Date();
     }
 
-    public Pedido() {
-        
+    public Pedido(Usuario usuario, List<ItemCarrinho> itens, double total) {
+        this.usuario = usuario;
+        this.itens = new ArrayList<>(itens);
+        this.total = total;
+        this.data = new Date();
+        for (ItemCarrinho item : this.itens) {
+            item.setPedido(this);
+        }
+    }
+
+    // Getters e Setters
+
+    public int getId() {
+        return id;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public List<ItemCarrinho> getItens() {
         return itens;
     }
 
+    public void setItens(List<ItemCarrinho> itens) {
+        this.itens = itens;
+        for (ItemCarrinho item : this.itens) {
+            item.setPedido(this);
+        }
+    }
+
     public double getTotal() {
         return total;
     }
 
+    public void setTotal(double total) {
+        this.total = total;
+    }
+
     public String exibirTotal() {
-        double total = getTotal();
         return String.format("%.2f", total);
     }
 
@@ -37,12 +82,7 @@ public class Pedido {
         return data;
     }
 
-    public void setData(Date date) {
-    }
-
-    public void setItens(ArrayList<ItemCarrinho> itemCarrinhos) {
-    }
-
-    public void setTotal(double total) {
+    public void setData(Date data) {
+        this.data = data;
     }
 }

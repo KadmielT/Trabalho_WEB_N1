@@ -9,15 +9,14 @@ import java.util.List;
 
 public class ProdutoDAO {
 
-    private EntityManager em = JPAUtil.getEntityManager();
-
     public ProdutoDAO() {}
 
     public void salvar(Produto produto) {
+        EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction transaction = em.getTransaction();
         try {
             transaction.begin();
-            em.persist(produto);
+            em.merge(produto);
             transaction.commit();
         } catch (RuntimeException e) {
             if (transaction.isActive()) {
@@ -28,6 +27,7 @@ public class ProdutoDAO {
     }
 
     public List<Produto> buscarTodos() {
+        EntityManager em = JPAUtil.getEntityManager();
         return em.createQuery("SELECT p FROM Produto p", Produto.class).getResultList();
     }
 }

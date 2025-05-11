@@ -30,7 +30,7 @@ public class ItemCarrinhoDAO {
         return em.createQuery("SELECT i FROM ItemCarrinho i", ItemCarrinho.class).getResultList();
     }
 
-    public List<ItemCarrinho> buscarPorCarrinho(Long idCarrinho) {
+    public List<ItemCarrinho> buscarPorCarrinho(int idCarrinho) {
         return em.createQuery("SELECT i FROM ItemCarrinho i WHERE i.carrinho.id = :idCarrinho", ItemCarrinho.class)
                 .setParameter("idCarrinho", idCarrinho)
                 .getResultList();
